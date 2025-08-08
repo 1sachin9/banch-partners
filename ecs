@@ -1,0 +1,35 @@
+// ECE Poornima Class Notes - React + Firebase Starter Code
+// Step 1: React App Entry (App.jsx)
+
+import React, { useState, useEffect } from "react";
+import WelcomeScreen from "./components/WelcomeScreen";
+import NameInput from "./components/NameInput";
+import NotesIntro from "./components/NotesIntro";
+import Dashboard from "./components/Dashboard";
+
+const App = () => {
+  const [step, setStep] = useState(0);
+  const [userName, setUserName] = useState(localStorage.getItem("userName") || "");
+
+  useEffect(() => {
+    if (userName) setStep(3); // Skip to dashboard if name already saved
+  }, [userName]);
+
+  const handleContinue = () => setStep(step + 1);
+  const handleSetName = (name) => {
+    localStorage.setItem("userName", name);
+    setUserName(name);
+    setStep(3);
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-100 text-center">
+      {step === 0 && <WelcomeScreen onContinue={handleContinue} />}
+      {step === 1 && <NameInput onSubmit={handleSetName} />}
+      {step === 2 && <NotesIntro onContinue={handleContinue} />}
+      {step === 3 && <Dashboard userName={userName} />}
+    </div>
+  );
+};
+
+export default App;
